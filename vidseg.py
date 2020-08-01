@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 
 
-roi = (200, 200, 300, 300) # use your ROI (x,y,w,h)
+roi = (100, 100, 400, 400) # use your ROI (x,y,w,h)
 
 video_capture = cv.VideoCapture(0)
 
@@ -15,8 +15,9 @@ bckgd = None
 
 
 print('Press SPACE to capture background.')
-print('Make sure that no object is inside the image ROI (red box).')
-print('You can reset the background at any time by pressing SPACE again.')
+print('  - Make sure that no object is inside the image ROI (red box).')
+print('  - You can reset the background at any time by pressing SPACE again.')
+print('Press ESC to exit.')
 
 while True:
     _, frame = video_capture.read()
@@ -43,9 +44,8 @@ while True:
     # Get a first estimation of the foreground (in our case, the hand) mask
     mask = cv.absdiff(bckgd, cv.cvtColor(img_roi, cv.COLOR_BGR2GRAY))
     _, mask = cv.threshold(mask, 127, 255, cv.THRESH_BINARY)
-    cv.imshow('Mask', mask)
 
-    # Refine hand mask estimation with GrabCut
+    # Refine object mask estimation with GrabCut
     if np.size(np.where(mask == 255)) == 0 or np.size(np.where(mask == 0)) == 0:
         continue
     mask_gc = np.zeros(img_roi.shape[:2], np.uint8)
@@ -54,11 +54,9 @@ while True:
 
     cv.grabCut(img_roi, mask_gc, None, bgModel, fgModel, 2, cv.GC_INIT_WITH_MASK)
 
-    mask2 = np.where((mask_gc == 2)|(mask_gc == 0), 0, 1).astype('uint8')
-    
-    # fmask is the final hand mask!
-    fmask = mask2 * 255
-    cv.imshow('Mask2', fmask)
+    # fmask is the final object mask!
+    fmask = np.where((mask_gc == 2)|(mask_gc == 0), 0, 255).astype('uint8')
+    cv.imshow('Mask', fmask)
 
     ##############################################################################
     ### CHANGE BACKGROUND, KEEP FOREGROUND
@@ -82,7 +80,6 @@ while True:
     new_frgd = new_frgd.astype(np.uint8)
 
     new_img = cv.add(new_bckgd, new_frgd)
-
     cv.imshow('final', new_img)
 
 
