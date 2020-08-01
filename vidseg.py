@@ -13,7 +13,6 @@ bgModel = np.zeros((1, 65), dtype="float")
 # video background
 bckgd = None
 
-
 print('Press SPACE to capture background.')
 print('  - Make sure that no object is inside the image ROI (red box).')
 print('  - You can reset the background at any time by pressing SPACE again.')
@@ -81,8 +80,3 @@ while True:
 
     new_img = cv.add(new_bckgd, new_frgd)
     cv.imshow('final', new_img)
-
-
-
-
-        
