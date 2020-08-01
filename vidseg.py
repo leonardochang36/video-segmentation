@@ -5,6 +5,8 @@ import numpy as np
 roi = (100, 100, 400, 400) # use your ROI (x,y,w,h)
 
 video_capture = cv.VideoCapture(0)
+cv.namedWindow('Video')
+cv.moveWindow('Video', 20, 20)
 
 # aux buffers for GrabCut models
 fgModel = np.zeros((1, 65), dtype="float")

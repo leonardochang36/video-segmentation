@@ -6,3 +6,11 @@ The resulting mask is used to change the image background, replacing it with an 
 I recommend to save the hand image along with its mask. Then, generate several images with 
 different backgrounds.
 
+![Alt Text](hand-segmentation.gif)
+
+# Usage
+
+Run in your terminal:
+
+```python3 vidseg.py```
+
